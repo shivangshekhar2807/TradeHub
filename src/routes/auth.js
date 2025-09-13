@@ -26,7 +26,7 @@ authRouter.post('/signUp', async (req, res) => {
         const resp = await user.save();
 
         const token = await jwt.sign({
-            id:resp._id
+            _id:resp._id
         },
             "shivangshekhar2807"
         )
@@ -61,7 +61,7 @@ authRouter.post('/login', async (req, res) => {
         }
 
         const token = await jwt.sign(
-          { id: emailPresent._id },
+          { _id: emailPresent._id },
           "shivangshekhar2807"
         );
 
@@ -86,6 +86,9 @@ authRouter.post('/logout', async (req, res) => {
 
 
 module.exports = authRouter;
+
+
+
 
    
   
