@@ -1,35 +1,33 @@
 
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
-const productDealSchema = mongoose.Schema(
-  {
-    buyerName: {
-      type: String,
-      required: true,
-    },
-    buyerId: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-    },
-    sellerName: {
-      type: String,
-      required: true,
-    },
-    sellerId: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-    },
 
-    productId: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-    },
+const productDealSchema = mongoose.Schema({
+  productId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "product",
   },
-  { timestamps: true }
-);
+  buyerId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "user",
+  },
+  sellerId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "user",
+  },
+  dealStatus: {
+    type: String,
+    default: "pending",
+    enum: {
+      values: ["done", "pending"],
+      message: `{VALUE} is incorrect Product deal status type.`,
+    },
+    },
+  
+},{timestamps:true});
 
-const productDealModel = mongoose.model("productDeal", productDealSchema);
+
+const productDealModel = mongoose.model("deal", productDealSchema);
 
 module.exports = productDealModel;
-
 

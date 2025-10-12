@@ -1,26 +1,74 @@
 
-const mongoose = require('mongoose')
-
+const mongoose = require('mongoose');
+const validator = require("validator");
 const userSchema = mongoose.Schema(
   {
     firstName: {
       type: String,
       required: true,
+      minLength: 4,
     },
-    password: {
+    lastName: {
       type: String,
-      required: true,
+      default: null,
     },
     email: {
       type: String,
       required: true,
       unique: true,
+      lowercase: true,
       trim: true,
+      validate(value) {
+        if (!validator.isEmail(value)) {
+          throw new Error("Invalid Email Address" + value);
+        }
+      },
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    phone: {
+      type: String,
+      required: true,
+      validate: {
+        validator: function (v) {
+          return /^\d{10}$/.test(v); // regex for exactly 10 digits
+        },
+        message: (props) =>
+          `${props.value} is not a valid 10-digit phone number!`,
+      },
+    },
+
+    photoUrl: {
+      type: String,
+      validate(value) {
+        if (!validator.isURL(value)) {
+          throw new Error("Invalid Photo URL: " + value);
+        }
+      },
+    },
+    city: {
+      type:String,
+    },
+
+    isPremium: {
+      type: Boolean,
+      default: false,
+    },
+    membershipType: {
+      type: String,
+      default: null,
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
 
-const UserModel = mongoose.model("Users", userSchema);
 
-module.exports = UserModel;
+const userModel = mongoose.model("user", userSchema);
+
+module.exports = userModel;
+
+//user--> firstName,lastName,productImg[],email,password,phone,about,originalprice,sellingPrice,purchaseDate,totalUsed,productType
