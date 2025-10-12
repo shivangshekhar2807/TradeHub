@@ -1,41 +1,92 @@
 
 const mongoose = require('mongoose');
+const validator = require("validator");
+
 
 const productSchema = mongoose.Schema(
   {
-    productName: {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "user",
+    },
+    contactNo: {
       type: String,
       required: true,
+      validate: {
+        validator: function (v) {
+          return /^\d{10}$/.test(v); // regex for exactly 10 digits
+        },
+        message: (props) =>
+          `${props.value} is not a valid 10-digit phone number!`,
+      },
     },
-    price: {
+    about: {
+      type: String,
+      maxLength: 180,
+      default: null,
+    },
+    originalprice: {
       type: Number,
-      required: true,
+      default: null,
     },
-    images: {
+    sellingPrice: {
+      type: Number,
+      default: null,
+    },
+    purchaseDate: {
+      type: Date,
+      default: null,
+    },
+    totalUsed: {
+      type: Number,
+      default: null,
+    },
+    productImg: {
       type: [String],
       required: true,
+      validate: {
+        validator: function (arr) {
+          return arr.every((url) => typeof url === "string");
+        },
+        message: (props) => `All product images must be valid URLs.`,
+      },
     },
-    description: {
+    productType: {
+      type: String,
+      required: true,
+      enum: {
+        values: ["electronics", "fashion", "kitchen"],
+        message: `{VALUE} is incorrect Product type.`,
+      },
+    },
+    distance: {
+      type: String,
+      default: null,
+    },
+    city: {
       type: String,
     },
-    available: {
-      type: Boolean,
-      required: true,
+
+    status: {
+      type: String,
+      default: "unsold",
     },
-    user: {
-      firstName: { type: String, required: true },
-      email: { type: String, required: true },
-      _id: { type: mongoose.Schema.Types.ObjectId, required: true },
-    },
-    user_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "users", // assumes your User model is named "users"
-      required: true,
+    currentStatus: {
+      type: String,
+      default: null,
+      enum: {
+        values: ["buy"],
+        message: `{VALUE} is incorrect Product type.`,
+      },
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
 
-const productModel = mongoose.model("products", productSchema);
+
+const productModel = mongoose.model("product", productSchema);
 
 module.exports = productModel;

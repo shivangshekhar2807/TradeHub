@@ -19,4 +19,77 @@ const Validator = (productName, price, images, available) => {
 };
 
 
-module.exports = Validator;
+
+const editprofileValidation = (data) => {
+  const isAllowed = ["firstName", "lastName", "phone", "photoUrl","city"];
+  
+  const keys = Object.keys(data);
+
+  const isValid = keys.every((key) => isAllowed.includes(key));
+
+  if (!isValid) {
+    throw new Error("Cannot edit non-editable fields");
+  }
+
+  return true;
+
+}
+
+
+const postUserProductValidation = (data) => {
+  const isAllowed = [
+    "userId",
+    "contactNo",
+    "about",
+    "originalprice",
+    "sellingPrice",
+    "purchaseDate",
+    "totalUsed",
+    "productImg",
+    "productType",
+    "city"
+  ];
+
+
+  const keys = Object.keys(data);
+
+  const isValid = keys.every((key) => isAllowed.includes(key));
+
+  if (!isValid) {
+    throw new Error("Cannot create a product with some random fields")
+  }
+  return true;
+}
+
+
+
+const editUserProductValidation = (data) => {
+  const isAllowed = [
+    "productType",
+    "productImg",
+    "totalUsed",
+    "purchaseDate",
+    "sellingPrice",
+    "originalprice",
+    "about",
+    "city"
+  ];
+
+  const keys = Object.keys(data);
+
+  const isValid = keys.every((key) => isAllowed.includes(key));
+
+   if (!isValid) {
+     throw new Error("Cannot edit non-editable fields");
+   }
+  
+  return true;
+}
+
+
+module.exports = {
+  Validator,
+  editprofileValidation,
+  postUserProductValidation,
+  editUserProductValidation,
+};

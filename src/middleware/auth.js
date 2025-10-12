@@ -1,30 +1,36 @@
-const jwt = require('jsonwebtoken');
-const userModel = require('../models/users')
-
-const userAuth = async (req,res,next) => {
+const jwt = require('jsonwebtoken')
+const userModel=require('../models/users')
+const userAuth = async (req, res, next) => {
     try {
-        const { token } = req.cookies;
-        if (!token) {
-            throw new Error("Token Not Present")
+        const { Token } = req.cookies;
+
+        if (!Token) {
+            return res.status(401).json({
+                status:"Unauthorized"
+            })
         }
 
-        const decoded = await jwt.verify(token, "shivangshekhar2807");
+        const decoded = await jwt.verify(Token, process.env.JWT_SECRET);
 
-        const { _id } = decoded;
+        const {_id}=decoded
 
-        const present = await userModel.findById(_id);
+        const user = await userModel.findById({ _id: _id });
 
-        if (!present) {
-            throw new Error("User not found")
+        if (!user) {
+            return res.status(401).json({
+                status:"User not found"
+            })
         }
-        req.user = present;
+
+        req.user = user;
         next();
     }
     catch (err) {
-        res.status(400).send(err.message)
+        res.status(401).json({
+             "ERROR": err.message
+         });
     }
-
+    
 }
 
 module.exports = userAuth;
-
