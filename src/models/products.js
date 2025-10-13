@@ -56,7 +56,7 @@ const productSchema = mongoose.Schema(
       type: String,
       required: true,
       enum: {
-        values: ["electronics", "fashion", "kitchen"],
+        values: ["electronics", "fashion", "daily"],
         message: `{VALUE} is incorrect Product type.`,
       },
     },

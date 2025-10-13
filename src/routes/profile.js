@@ -41,7 +41,8 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
         const { _id } = req.user;
 
         const number = req.user.phone
-        const {phone}=req.body
+        const City = req.user.city;
+        const {phone,city}=req.body
 
         //validation check for fields to be edited
 
@@ -71,9 +72,16 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
          
              await productModel.updateMany(
                { userId: _id ,status:"unsold"},
-               { $set: { contactNo: phone } }
+               { $set: { contactNo: phone} }
              );
         }
+
+            if (city !== undefined && City !== city) {
+              await productModel.updateMany(
+                { userId: _id, status: "unsold" },
+                { $set: { city} }
+              );
+            }
         
       
 
@@ -81,7 +89,7 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
 
         // send back the updated data
 
-        res.json({
+        res.status(200).json({
             status: "Update Successfull",
             data:newUser
         })

@@ -9,7 +9,14 @@ feedproductsRouter.get("/products", userAuth, async (req, res) => {
 
         //get users id
 
-        const { _id,city } = req.user;
+        const { _id, city } = req.user;
+        const { status } = req.query;
+
+        const isAllowed = ["electronics", "fashion", "daily","all"];
+
+        if (!isAllowed.includes(status)) {
+            throw new Error("Product Status Invalid")
+        }
 
         const page = parseInt(req.query.page) || 1;
         let limit = parseInt(req.query.limit) || 10;
@@ -18,13 +25,68 @@ feedproductsRouter.get("/products", userAuth, async (req, res) => {
 
         //exclude - loggedin user products, sold products, currentStatus-buy
 
-        const products = await productModel.find({
-        $and:[
-              { userId: { $ne: _id } },
-            { status: { $ne: "sold" } },
-                { currentStatus: { $ne: "buy" } },
-        ]
-        }).skip(skip).limit(limit);
+        let products;
+        if (status == "electronics" || status == "fashion" || status == "daily") {
+            //  products = await productModel
+            //    .find({
+            //      $and: [
+            //        { userId: { $ne: _id } },
+            //        { status: { $ne: "sold" } },
+            //        { currentStatus: { $ne: "buy" } },
+            //        { productType: { $in: status } },
+            //      ],
+            //    })
+            //    .skip(skip)
+            //    .limit(limit);
+
+             products = await productModel
+               .find({
+                 $and: [
+                   { userId: { $ne: _id } },
+                   { status: { $ne: "sold" } },
+                   {
+                     $nor: [
+                       { $and: [{ userId: _id }, { currentStatus: "buy" }] }, // condition 3
+                     ],
+                   },
+                   { productType: { $in: status } },
+                 ],
+               })
+               .skip(skip)
+               .limit(limit);
+
+        }
+
+        if (status == "all") {
+            //  products = await productModel
+            //    .find({
+            //      $and: [
+            //        { userId: { $ne: _id } },
+            //        { status: { $ne: "sold" } },
+            //         { currentStatus: { $ne: "buy" } },
+                   
+            //      ],
+            //    })
+            //    .skip(skip)
+            //    .limit(limit);
+
+             products = await productModel
+              .find({
+                $and: [
+                  { userId: { $ne: _id } }, // condition 1
+                  { status: { $ne: "sold" } }, // condition 2
+                  {
+                    $nor: [
+                      { $and: [{ userId: _id }, { currentStatus: "buy" }] }, // condition 3
+                    ],
+                  },
+                ],
+              })
+              .skip(skip)
+              .limit(limit);
+        }
+
+       
 
         //return the products
         

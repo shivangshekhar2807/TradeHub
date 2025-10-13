@@ -125,7 +125,7 @@ userAuthRouter.post('/logout', async (req, res) => {
   res.cookie("Token", null, {
     expires: new Date(Date.now()),
   });
-  res.json({
+  res.status(201).json({
     status: "LOGOUT SUCCESSFULL",
   });
 })

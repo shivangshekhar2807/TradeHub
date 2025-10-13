@@ -5,11 +5,11 @@ const userModel = require('../models/users');
 const productDealModel = require('../models/productDeal');
 const productDealRouter = express.Router();
 
-const BUYER_SELLER_DATA = "firstName lastName city";
+const BUYER_SELLER_DATA = "firstName lastName city phone";
 const PRODUCT_DATA =
   "contactNo originalprice sellingPrice productImg city status";
 
-productDealRouter.post("/user/Product/deal", userAuth, async (req, res) => {
+productDealRouter.post("/user/products/deals", userAuth, async (req, res) => {
     try {
       const { sellerId, productId } = req.body;
       const { _id } = req.user;
@@ -51,6 +51,8 @@ productDealRouter.post("/user/Product/deal", userAuth, async (req, res) => {
         }
 
         //save the deal
+
+
         
         const createDeal = new productDealModel({
           sellerId,
@@ -59,6 +61,12 @@ productDealRouter.post("/user/Product/deal", userAuth, async (req, res) => {
         });
 
         const deal = await createDeal.save();
+
+    const productCurrentStatus = await productModel.findOneAndUpdate(
+      { _id: productId },
+      { $set: { currentStatus: "buy" } },
+      { new: true }
+    );
 
         res.status(201).json({
             status: "Product is in buy state",
@@ -73,7 +81,7 @@ productDealRouter.post("/user/Product/deal", userAuth, async (req, res) => {
 });
 
 
-productDealRouter.get("/user/Product/deal", userAuth, async (req, res) => {
+productDealRouter.get("/user/products/deals", userAuth, async (req, res) => {
     try {
         const { status } = req.query;
         const { _id } = req.user;
@@ -85,23 +93,40 @@ productDealRouter.get("/user/Product/deal", userAuth, async (req, res) => {
 
         //check status validation
 
-        const isAllowed = ["done", "pending"];
+        const isAllowed = ["done", "pending","all"];
 
         if (!isAllowed.includes(status)) {
             throw new Error("Wrong Status type")
         }
 
         // put filter and populate fields
+        let othersProducts;
+        if (status == "done" || status == "pending") {
+             othersProducts = await productDealModel
+               .find({
+                 buyerId: _id,
+                 dealStatus: status,
+               })
+               .skip(skip)
+               .limit(limit)
+               .populate("buyerId", BUYER_SELLER_DATA)
+               .populate("sellerId", BUYER_SELLER_DATA)
+               .populate("productId", PRODUCT_DATA);
+        }
 
-        const othersProducts = await productDealModel
-          .find({
-            buyerId: _id,
-            dealStatus: status,
-          })
-          .skip(skip).limit(limit)
-          .populate("buyerId", BUYER_SELLER_DATA)
-          .populate("sellerId", BUYER_SELLER_DATA)
-          .populate("productId", PRODUCT_DATA);
+        if (status == "all") {
+              othersProducts = await productDealModel
+                .find({
+                  buyerId: _id,
+                })
+                .skip(skip)
+                .limit(limit)
+                .populate("buyerId", BUYER_SELLER_DATA)
+                .populate("sellerId", BUYER_SELLER_DATA)
+                .populate("productId", PRODUCT_DATA);
+        }
+
+      
 
         
 

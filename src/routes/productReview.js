@@ -5,7 +5,7 @@ const productModel = require('../models/products');
 const userModel = require('../models/users');
 const productReviewRouter = express.Router();
 
-const BUYER_SELLER_DATA = "firstName lastName city";
+const BUYER_SELLER_DATA = "firstName lastName city phone";
 const PRODUCT_DATA =
     "contactNo originalprice sellingPrice productImg city status";
   
