@@ -36,9 +36,10 @@ app.use(cookieparser());
 
 app.use("/", userAuthRouter);
 app.use("/", profileRouter);
+
 app.use("/", userProductRouter);
 app.use("/", feedproductsRouter)
-app.use("/", productDealRouter)
+app.use("/", productDealRouter);
 app.use("/", productReviewRouter);
 
 

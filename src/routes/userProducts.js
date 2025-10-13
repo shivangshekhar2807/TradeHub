@@ -5,11 +5,11 @@ const {postUserProductValidation, editUserProductValidation}=require('../validat
 const userModel = require('../models/users');
 const productModel = require('../models/products');
 
-userProductRouter.post("/user/products", userAuth, async (req, res) => {
+userProductRouter.post("/user/product", userAuth, async (req, res) => {
     try {
       // get the logged in user id and phone
 
-        const { _id, phone } = req.user;
+        const { _id, phone,city } = req.user;
         
 
       //postUserProductValidation for right fields
@@ -24,7 +24,7 @@ userProductRouter.post("/user/products", userAuth, async (req, res) => {
           totalUsed,
           productImg,
           productType,
-          city
+          
         } = req.body;
 
       //check user present in Db or not
@@ -47,7 +47,7 @@ userProductRouter.post("/user/products", userAuth, async (req, res) => {
           productType,
           contactNo: phone,
           userId:_id,
-          city
+          city:city
         });
 
         //save the product in DB
@@ -67,7 +67,7 @@ userProductRouter.post("/user/products", userAuth, async (req, res) => {
 });
 
 
-userProductRouter.get("/user/products/:status", userAuth, async (req, res) => {
+userProductRouter.get("/user/products/", userAuth, async (req, res) => {
     try {
 
         //get users id
@@ -78,7 +78,7 @@ userProductRouter.get("/user/products/:status", userAuth, async (req, res) => {
 
         const allowedStatus = ["sold", "unsold", "all"];
 
-        const { status } = req.params;
+        const { status } = req.query;
 
         if (!allowedStatus.includes(status)) {
             throw new Error("Cannot get products for invalid status type");
@@ -116,7 +116,7 @@ userProductRouter.get("/user/products/:status", userAuth, async (req, res) => {
     }
 });
 
-userProductRouter.get("/user/products/:id", userAuth, async (req, res) => {
+userProductRouter.get("/user/product/:id", userAuth, async (req, res) => {
     try {
         //get id from req.params
 
@@ -143,7 +143,7 @@ userProductRouter.get("/user/products/:id", userAuth, async (req, res) => {
 });
 
 
-userProductRouter.patch("/user/products/:id", userAuth, async (req, res) => {
+userProductRouter.patch("/user/product/:id", userAuth, async (req, res) => {
     try {
         // get the id from params of product
 

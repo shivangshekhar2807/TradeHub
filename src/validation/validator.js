@@ -47,7 +47,7 @@ const postUserProductValidation = (data) => {
     "totalUsed",
     "productImg",
     "productType",
-    "city"
+    
   ];
 
 
