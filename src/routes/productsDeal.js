@@ -4,6 +4,7 @@ const productModel = require('../models/products');
 const userModel = require('../models/users');
 const productDealModel = require('../models/productDeal');
 const productDealRouter = express.Router();
+const {run}=require('../utils/sendEmail')
 
 const BUYER_SELLER_DATA = "firstName lastName city phone";
 const PRODUCT_DATA =
@@ -67,6 +68,8 @@ productDealRouter.post("/user/products/deals", userAuth, async (req, res) => {
       { $set: { currentStatus: "buy" } },
       { new: true }
     );
+        
+      
 
         res.status(201).json({
             status: "Product is in buy state",

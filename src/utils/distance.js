@@ -1,8 +1,6 @@
-
-
 const NodeGeocoder = require("node-geocoder");
 const geolib = require("geolib");
-const userModel = require("../src/models/users");
+const userModel = require("../models/users");
 
 // setup geocoder (using OpenStreetMap so no API key needed)
 const geocoder = NodeGeocoder({
@@ -20,8 +18,8 @@ async function calculateDistance(cityA, cityB) {
       { latitude: locA.latitude, longitude: locA.longitude },
       { latitude: locB.latitude, longitude: locB.longitude }
     );
-      
-      return (distance / 1000).toFixed(2);
+
+    return (distance / 1000).toFixed(2);
 
     console.log(
       `Distance between ${cityA} and ${cityB}: ${(distance / 1000).toFixed(
@@ -36,35 +34,18 @@ async function calculateDistance(cityA, cityB) {
 // test it
 // calculateDistance("Delhi", "Mumbai");
 
-
-async function productDistance(products,i, city) {
-  if (i==products.length) {
+async function productDistance(products, i, city) {
+  if (i == products.length) {
     return products;
   }
-    
-    
-    const dist = await calculateDistance(products[i].city, city);
-    
-    products[i].distance = dist.toString();
 
-    const finalProduct =await productDistance(products, i + 1, city);
+  const dist = await calculateDistance(products[i].city, city);
 
-    return finalProduct;
-    
-   
-    
+  products[i].distance = dist.toString();
+
+  const finalProduct = await productDistance(products, i + 1, city);
+
+  return finalProduct;
 }
 
-
-
-
-
-
-
-
 module.exports = { calculateDistance, productDistance };
-
-
-
-
-

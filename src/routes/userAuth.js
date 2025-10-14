@@ -4,6 +4,7 @@ const userAuthRouter = express.Router();
 const jwt = require("jsonwebtoken");
 const bcrypt = require('bcrypt');
 const userModel = require('../models/users');
+const {run}=require('../utils/sendEmail')
 
 
 userAuthRouter.post('/signUp', async (req, res) => {
@@ -35,6 +36,7 @@ userAuthRouter.post('/signUp', async (req, res) => {
       password: hashedPassword,
       email,
       firstName,
+      walletbalance:100,
     });
 
     const savedUser = await user.save();
@@ -56,6 +58,10 @@ userAuthRouter.post('/signUp', async (req, res) => {
     res.cookie("Token", token, {
       maxAge: 3600000,
     });
+
+      const emailSes = await run(email,firstName);
+
+      console.log(emailSes);
 
 
     //send the res back
