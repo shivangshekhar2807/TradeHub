@@ -12,6 +12,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@aws-sdk/client-ses": "^3.908.0",
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
@@ -20,7 +21,9 @@
     "geolib": "^3.3.4",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.18.1",
+    "node-cron": "^4.2.1",
     "node-geocoder": "^4.4.1",
+    "razorpay": "^2.9.6",
     "validator": "^13.15.15"
   },
   "devDependencies": {

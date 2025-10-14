@@ -49,7 +49,22 @@ const userSchema = mongoose.Schema(
       },
     },
     city: {
-      type:String,
+      type: String,
+    },
+
+    walletbalance: {
+      type: Number,
+      default: 0,
+      validate: {
+        validator: function (value) {
+          return value >= 0;
+        },
+        message: "Wallet balance cannot be in negative",
+      },
+    },
+
+    verifyOrderId: {
+      type:String
     },
 
     isPremium: {

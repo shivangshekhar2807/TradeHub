@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 require("dotenv").config();
 const connectDb = require('./DBconfig/database')
+// require('./utils/cronJob')
 const cors = require("cors");
 const cookieparser = require("cookie-parser");
 const userAuthRouter=require('./routes/userAuth');
@@ -10,6 +11,7 @@ const userProductRouter = require('./routes/userProducts');
 const feedproductsRouter = require('./routes/feedProducts');
 const productDealRouter = require('./routes/productsDeal');
 const productReviewRouter = require('./routes/productReview');
+const paymentRouter = require('./routes/payment');
 
 
 connectDb().then(() => {
@@ -41,7 +43,7 @@ app.use("/", userProductRouter);
 app.use("/", feedproductsRouter)
 app.use("/", productDealRouter);
 app.use("/", productReviewRouter);
-
+app.use("/", paymentRouter);
 
 
 

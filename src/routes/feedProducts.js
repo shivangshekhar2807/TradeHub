@@ -1,112 +1,103 @@
 const express = require("express");
 const userAuth = require("../middleware/auth");
 const productModel = require("../models/products");
-const { productDistance } = require("../../utils/distance");
+const { productDistance } = require("../utils/distance");
 const feedproductsRouter = express.Router();
 
+
 feedproductsRouter.get("/products", userAuth, async (req, res) => {
-    try {
+  try {
+    //get users id
 
-        //get users id
+    const { _id, city } = req.user;
+    const { status } = req.query;
 
-        const { _id, city } = req.user;
-        const { status } = req.query;
+    const isAllowed = ["electronics", "fashion", "daily", "all"];
 
-        const isAllowed = ["electronics", "fashion", "daily","all"];
-
-        if (!isAllowed.includes(status)) {
-            throw new Error("Product Status Invalid")
-        }
-
-        const page = parseInt(req.query.page) || 1;
-        let limit = parseInt(req.query.limit) || 10;
-        limit = limit > 50 ? 50 : limit;
-        const skip = (page - 1) * limit;
-
-        //exclude - loggedin user products, sold products, currentStatus-buy
-
-        let products;
-        if (status == "electronics" || status == "fashion" || status == "daily") {
-            //  products = await productModel
-            //    .find({
-            //      $and: [
-            //        { userId: { $ne: _id } },
-            //        { status: { $ne: "sold" } },
-            //        { currentStatus: { $ne: "buy" } },
-            //        { productType: { $in: status } },
-            //      ],
-            //    })
-            //    .skip(skip)
-            //    .limit(limit);
-
-             products = await productModel
-               .find({
-                 $and: [
-                   { userId: { $ne: _id } },
-                   { status: { $ne: "sold" } },
-                   {
-                     $nor: [
-                       { $and: [{ userId: _id }, { currentStatus: "buy" }] }, // condition 3
-                     ],
-                   },
-                   { productType: { $in: status } },
-                 ],
-               })
-               .skip(skip)
-               .limit(limit);
-
-        }
-
-        if (status == "all") {
-            //  products = await productModel
-            //    .find({
-            //      $and: [
-            //        { userId: { $ne: _id } },
-            //        { status: { $ne: "sold" } },
-            //         { currentStatus: { $ne: "buy" } },
-                   
-            //      ],
-            //    })
-            //    .skip(skip)
-            //    .limit(limit);
-
-             products = await productModel
-              .find({
-                $and: [
-                  { userId: { $ne: _id } }, // condition 1
-                  { status: { $ne: "sold" } }, // condition 2
-                  {
-                    $nor: [
-                      { $and: [{ userId: _id }, { currentStatus: "buy" }] }, // condition 3
-                    ],
-                  },
-                ],
-              })
-              .skip(skip)
-              .limit(limit);
-        }
-
-       
-
-        //return the products
-        
-        const finalProducts =await productDistance(products, 0, city);
-        
-
-
-       
-        res.status(200).json({
-          count: finalProducts.length,
-          results: finalProducts,
-        });
-        
+    if (!isAllowed.includes(status)) {
+      throw new Error("Product Status Invalid");
     }
-    catch (err) {
-         res.status(400).json({
-           ERROR: err.message,
-         });
+
+    const page = parseInt(req.query.page) || 1;
+    let limit = parseInt(req.query.limit) || 10;
+    limit = limit > 50 ? 50 : limit;
+    const skip = (page - 1) * limit;
+
+    //exclude - loggedin user products, sold products, currentStatus-buy
+
+    let products;
+    if (status == "electronics" || status == "fashion" || status == "daily") {
+      //  products = await productModel
+      //    .find({
+      //      $and: [
+      //        { userId: { $ne: _id } },
+      //        { status: { $ne: "sold" } },
+      //        { currentStatus: { $ne: "buy" } },
+      //        { productType: { $in: status } },
+      //      ],
+      //    })
+      //    .skip(skip)
+      //    .limit(limit);
+
+      products = await productModel
+        .find({
+          $and: [
+            { userId: { $ne: _id } },
+            { status: { $ne: "sold" } },
+            {
+              $nor: [
+                { $and: [{ userId: _id }, { currentStatus: "buy" }] }, // condition 3
+              ],
+            },
+            { productType: { $in: status } },
+          ],
+        })
+        .skip(skip)
+        .limit(limit);
     }
+
+    if (status == "all") {
+      //  products = await productModel
+      //    .find({
+      //      $and: [
+      //        { userId: { $ne: _id } },
+      //        { status: { $ne: "sold" } },
+      //         { currentStatus: { $ne: "buy" } },
+
+      //      ],
+      //    })
+      //    .skip(skip)
+      //    .limit(limit);
+
+      products = await productModel
+        .find({
+          $and: [
+            { userId: { $ne: _id } }, // condition 1
+            { status: { $ne: "sold" } }, // condition 2
+            {
+              $nor: [
+                { $and: [{ userId: _id }, { currentStatus: "buy" }] }, // condition 3
+              ],
+            },
+          ],
+        })
+        .skip(skip)
+        .limit(limit);
+    }
+
+    //return the products
+
+    const finalProducts = await productDistance(products, 0, city);
+
+    res.status(200).json({
+      count: finalProducts.length,
+      results: finalProducts,
+    });
+  } catch (err) {
+    res.status(400).json({
+      ERROR: err.message,
+    });
+  }
 });
-
 
 module.exports = feedproductsRouter;

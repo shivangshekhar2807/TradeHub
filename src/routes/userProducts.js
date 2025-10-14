@@ -9,8 +9,9 @@ userProductRouter.post("/user/product", userAuth, async (req, res) => {
     try {
       // get the logged in user id and phone
 
-        const { _id, phone,city } = req.user;
+        const { _id, phone, city } = req.user;
         
+    
 
       //postUserProductValidation for right fields
 
@@ -34,6 +35,12 @@ userProductRouter.post("/user/product", userAuth, async (req, res) => {
       if (!user) {
         throw new Error("Product cannot be added , as user is not present.");
       }
+        
+        //check balance
+
+        if (user.walletbalance < 10) {
+            throw new Error("Sorry you cannot add more products because your wallet balance is low. Please recharge!!!")
+        }
 
       //make a new product model and explicitly put contact as phone and _id as userId
 
@@ -51,6 +58,12 @@ userProductRouter.post("/user/product", userAuth, async (req, res) => {
         });
 
         //save the product in DB
+
+        const newBallance = user.walletbalance - 10;
+
+        user.walletbalance = newBallance;
+
+        await user.save();
         
         const savedProduct = await product.save();
 
