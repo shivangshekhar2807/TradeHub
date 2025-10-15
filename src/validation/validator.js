@@ -116,7 +116,7 @@ const getDayAndTime = async (isoString) => {
   console.log("createdAt (raw):", isoString);
   console.log("Local hours:", new Date(isoString).getHours());
   console.log("IST hours:", (new Date(isoString).getHours() + 5.5) % 24);
-  console.log("getDayAndTime result:", valid);
+
 
 
    const dateObj = new Date(isoString);
