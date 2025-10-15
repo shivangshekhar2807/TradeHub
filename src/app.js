@@ -4,7 +4,7 @@ require("dotenv").config();
 const connectDb = require('./DBconfig/database')
 require('./utils/weekEndCron')
 
-// require("./utils/weekDayCron");
+
 
 const cors = require("cors");
 const cookieparser = require("cookie-parser");

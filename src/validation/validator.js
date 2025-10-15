@@ -119,16 +119,26 @@ const getDayAndTime = async (isoString) => {
 
 
 
-   const dateObj = new Date(isoString);
+     const dateObj = new Date(isoString);
 
-   // Convert UTC → IST (+5 hours 30 minutes)
-   const istTime = new Date(dateObj.getTime() + 5.5 * 60 * 60 * 1000);
+     // Convert UTC → IST (+5 hours 30 minutes)
+     const istTime = new Date(dateObj.getTime() + 5.5 * 60 * 60 * 1000);
 
-   const hours = istTime.getHours();
-   const minutes = istTime.getMinutes();
+     const hours = istTime.getHours();
+     const minutes = istTime.getMinutes();
 
-   // ✅ Between 12:00 AM and 12:59 AM IST
-   return hours === 0 && minutes >= 0 && minutes < 60;
+     console.log("createdAt (raw):", isoString);
+     console.log(
+       "IST Time:",
+       istTime.toISOString(),
+       "→ Hours:",
+       hours,
+       "Minutes:",
+       minutes
+     );
+
+     // ✅ Between 12:00 PM and 12:59 PM IST
+     return hours === 12 && minutes >= 0 && minutes < 60;
 };
 
 
