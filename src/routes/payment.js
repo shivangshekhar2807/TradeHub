@@ -115,7 +115,7 @@ paymentRouter.post("/payment/webhook", async (req, res) => {
 
     const valid =await getDayAndTime(payment.createdAt);
 
-   
+     console.log("getDayAndTime result:", valid);
 
     const amount = paymentDetails.amount / 100;
 
