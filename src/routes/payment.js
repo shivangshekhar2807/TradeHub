@@ -5,6 +5,7 @@ const razorpayInstance=require("../utils/razorpay");
 const orderPaymentModel = require("../models/orderPayment");
 const { validateWebhookSignature} = require("razorpay/dist/utils/razorpay-utils");
 const userModel = require("../models/users");
+const { run: sendPaymentEmail } = require("../utils/sendEmail");
 
 paymentRouter.post("/payment/create/orderId", userAuth, async (req, res) => {
     try {
@@ -89,23 +90,48 @@ paymentRouter.post("/payment/webhook", async(req, res) => {
 
         await payment.save();
 
-        if (paymentDetails.status == "captured") {
+        // if (paymentDetails.status == "captured") {
             
-              const user = await userModel.findById({
-                _id: payment.user,
-              });
+        //       const user = await userModel.findById({
+        //         _id: payment.user,
+        //       });
 
-              let oldBalance = user.walletbalance;
+        //       let oldBalance = user.walletbalance;
 
-              let amount = paymentDetails.amount / 100;
+        //       let amount = paymentDetails.amount / 100;
 
-              let newBalance = oldBalance + amount;
+        //       let newBalance = oldBalance + amount;
 
-              user.walletbalance = newBalance;
-              user.verifyOrderId = paymentDetails.order_id;
+        //       user.walletbalance = newBalance;
+        //       user.verifyOrderId = paymentDetails.order_id;
 
-              await user.save();
-        }
+        //       await user.save();
+        // }
+
+
+
+         const user = await userModel.findById(payment.user);
+
+         if (!user) {
+           return res.status(404).json({ ERROR: "User not found" });
+         }
+
+         const amount = paymentDetails.amount / 100;
+
+         if (paymentDetails.status === "captured") {
+           user.walletbalance += amount;
+           user.verifyOrderId = paymentDetails.order_id;
+           await user.save();
+         }
+
+         // 🔹 Send SES email notification (success or failed)
+         await sendPaymentEmail({
+           email:user.email,
+           firstName: user.firstName,
+           phone: user.phone,
+           amount,
+           status: paymentDetails.status,
+         });
 
 
       

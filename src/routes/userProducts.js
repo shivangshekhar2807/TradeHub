@@ -25,7 +25,7 @@ userProductRouter.post("/user/product", userAuth, async (req, res) => {
           totalUsed,
           productImg,
           productType,
-          
+          productName,
         } = req.body;
 
       //check user present in Db or not
@@ -53,8 +53,9 @@ userProductRouter.post("/user/product", userAuth, async (req, res) => {
           productImg,
           productType,
           contactNo: phone,
-          userId:_id,
-          city:city
+          userId: _id,
+          city: city,
+          productName,
         });
 
         //save the product in DB
