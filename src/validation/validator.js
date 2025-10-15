@@ -88,6 +88,8 @@ const editUserProductValidation = (data) => {
 }
 
 const getDayAndTime = async (isoString) => {
+
+
   //  const dateObj = new Date(isoString);
 
   //  const days = [
@@ -101,35 +103,27 @@ const getDayAndTime = async (isoString) => {
   //  ];
   //  const day = days[dateObj.getDay()]; // local day
 
-  //  // Format hours and minutes with leading zeros
-  //  const hours = String(dateObj.getHours()).padStart(2, "0");
-  //  const minutes = String(dateObj.getMinutes()).padStart(2, "0");
-  //  const time = `${hours}:${minutes}`;
+  //  const hours = dateObj.getHours(); // 0-23
+  //  const minutes = dateObj.getMinutes();
 
-  //  return { day, time };
+  //  // Check if it's Wednesday and hour is between 15:00 and 15:59
+  //  if (day === "Wednesday" && hours === 15) {
+  //    return true;
+  //  } else {
+  //    return false;
+  //  }
 
-   const dateObj = new Date(isoString);
+    const dateObj = new Date(isoString);
 
-   const days = [
-     "Sunday",
-     "Monday",
-     "Tuesday",
-     "Wednesday",
-     "Thursday",
-     "Friday",
-     "Saturday",
-   ];
-   const day = days[dateObj.getDay()]; // local day
+    const hours = dateObj.getHours(); // 0-23
+    const minutes = dateObj.getMinutes();
 
-   const hours = dateObj.getHours(); // 0-23
-   const minutes = dateObj.getMinutes();
-
-   // Check if it's Wednesday and hour is between 15:00 and 15:59
-   if (day === "Wednesday" && hours === 15) {
-     return true;
-   } else {
-     return false;
-   }
+    // ✅ Check if time is between 12:00 AM and 12:59 AM
+    if (hours === 0 && minutes >= 0 && minutes < 60) {
+      return true;
+    } else {
+      return false;
+    }
 };
 
 
