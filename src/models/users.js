@@ -67,6 +67,16 @@ const userSchema = mongoose.Schema(
       type:String
     },
 
+    weekEndOffer: {
+      type: Boolean,
+      default:false
+    },
+
+    weekEndOfferText: {
+      type: String,
+      default:"Sorry there is no offer going on!!!"
+    },
+
     isPremium: {
       type: Boolean,
       default: false,

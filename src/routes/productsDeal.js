@@ -4,7 +4,8 @@ const productModel = require('../models/products');
 const userModel = require('../models/users');
 const productDealModel = require('../models/productDeal');
 const productDealRouter = express.Router();
-const {run}=require('../utils/sendEmail')
+const {run}=require('../utils/sendEmail');
+const notificationModel = require('../models/notification');
 
 const BUYER_SELLER_DATA = "firstName lastName city phone";
 const PRODUCT_DATA =
@@ -15,7 +16,7 @@ productDealRouter.post("/user/products/deals", userAuth, async (req, res) => {
       const { sellerId, productId } = req.body;
       const { _id } = req.user;
       
-      
+      const buyerId=await userModel.findById(_id)
        
 
       // check if the product present or not and in unsold state
@@ -69,7 +70,18 @@ productDealRouter.post("/user/products/deals", userAuth, async (req, res) => {
       { new: true }
     );
         
+        
+        
       
+        const dealNotification = new notificationModel({
+          seller: sellerId,
+          product: productId,
+          buyer: buyerId,
+          notification: `Hi ${seller.firstName}, you have got a buyer called ${buyerId.firstName} for your product ${productCurrentStatus.productName} to buy. Kindly check!!`,
+        });
+
+
+        await dealNotification.save();
 
         res.status(201).json({
             status: "Product is in buy state",

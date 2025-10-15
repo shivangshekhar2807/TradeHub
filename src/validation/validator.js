@@ -87,10 +87,56 @@ const editUserProductValidation = (data) => {
   return true;
 }
 
+const getDayAndTime = async (isoString) => {
+  //  const dateObj = new Date(isoString);
+
+  //  const days = [
+  //    "Sunday",
+  //    "Monday",
+  //    "Tuesday",
+  //    "Wednesday",
+  //    "Thursday",
+  //    "Friday",
+  //    "Saturday",
+  //  ];
+  //  const day = days[dateObj.getDay()]; // local day
+
+  //  // Format hours and minutes with leading zeros
+  //  const hours = String(dateObj.getHours()).padStart(2, "0");
+  //  const minutes = String(dateObj.getMinutes()).padStart(2, "0");
+  //  const time = `${hours}:${minutes}`;
+
+  //  return { day, time };
+
+   const dateObj = new Date(isoString);
+
+   const days = [
+     "Sunday",
+     "Monday",
+     "Tuesday",
+     "Wednesday",
+     "Thursday",
+     "Friday",
+     "Saturday",
+   ];
+   const day = days[dateObj.getDay()]; // local day
+
+   const hours = dateObj.getHours(); // 0-23
+   const minutes = dateObj.getMinutes();
+
+   // Check if it's Wednesday and hour is between 15:00 and 15:59
+   if (day === "Wednesday" && hours === 15) {
+     return true;
+   } else {
+     return false;
+   }
+};
+
 
 module.exports = {
   Validator,
   editprofileValidation,
   postUserProductValidation,
   editUserProductValidation,
+  getDayAndTime,
 };
