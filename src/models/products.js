@@ -21,6 +21,10 @@ const productSchema = mongoose.Schema(
           `${props.value} is not a valid 10-digit phone number!`,
       },
     },
+    productName: {
+      type: String,
+      required: true,
+    },
     about: {
       type: String,
       maxLength: 180,
@@ -29,18 +33,22 @@ const productSchema = mongoose.Schema(
     originalprice: {
       type: Number,
       default: null,
+      required: true,
     },
     sellingPrice: {
       type: Number,
       default: null,
+      required: true,
     },
     purchaseDate: {
       type: Date,
       default: null,
+      required: true,
     },
     totalUsed: {
       type: Number,
       default: null,
+      required: true,
     },
     productImg: {
       type: [String],
@@ -66,6 +74,7 @@ const productSchema = mongoose.Schema(
     },
     city: {
       type: String,
+      required: true,
     },
 
     status: {

@@ -47,7 +47,7 @@ const postUserProductValidation = (data) => {
     "totalUsed",
     "productImg",
     "productType",
-    
+    "productName",
   ];
 
 
@@ -72,7 +72,8 @@ const editUserProductValidation = (data) => {
     "sellingPrice",
     "originalprice",
     "about",
-    "city"
+    "city",
+    "productName",
   ];
 
   const keys = Object.keys(data);

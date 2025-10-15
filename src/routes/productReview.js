@@ -7,7 +7,7 @@ const productReviewRouter = express.Router();
 
 const BUYER_SELLER_DATA = "firstName lastName city phone";
 const PRODUCT_DATA =
-    "contactNo originalprice sellingPrice productImg city status";
+  "contactNo originalprice sellingPrice productImg city status productType productName";
   
 
 
@@ -106,7 +106,9 @@ productReviewRouter.get("/user/Product/deal/Review", userAuth, async (req, res) 
           .limit(limit)
           .populate("buyerId", BUYER_SELLER_DATA)
           .populate("sellerId", BUYER_SELLER_DATA)
-          .populate("productId", PRODUCT_DATA);
+            .populate("productId", PRODUCT_DATA);
+        
+         
 
 
         res.status(200).json({

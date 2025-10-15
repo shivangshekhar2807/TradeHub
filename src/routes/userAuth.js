@@ -59,9 +59,9 @@ userAuthRouter.post('/signUp', async (req, res) => {
       maxAge: 3600000,
     });
 
-      const emailSes = await run(email,firstName);
+      // const emailSes = await run(email,firstName);
 
-      console.log(emailSes);
+      // console.log(emailSes);
 
 
     //send the res back
