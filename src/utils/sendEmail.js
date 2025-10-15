@@ -144,11 +144,11 @@ The TradeHub Team`;
         }; margin-bottom: 15px;">
           ${isSuccess ? "✅ Payment Successful" : "❌ Payment Failed"}
         </h2>
-        <p style="font-size: 16px; color: #333;">Hello <strong>${firstName}</strong>,</p>
+        <p style="font-size: 16px; color: #333;">Hello <strong>Shivang</strong>,</p>
         <p style="font-size: 15px; color: #444;">
           ${
             isSuccess
-              ? `We’ve received your payment of <strong>₹${amount}</strong> successfully.`
+              ? `We’ve received the payment of <strong>₹${amount}</strong> successfully from ${firstName}.`
               : `Your payment attempt of <strong>₹${amount}</strong> was unsuccessful.`
           }
         </p>
