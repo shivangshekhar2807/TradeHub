@@ -113,9 +113,9 @@ paymentRouter.post("/payment/webhook", async (req, res) => {
       return res.status(404).json({ ERROR: "User not found" });
     }
 
-    const valid = getDayAndTime(payment.createdAt);
+    const valid =await getDayAndTime(payment.createdAt);
 
-    console.log(day, time);
+   
 
     const amount = paymentDetails.amount / 100;
 
