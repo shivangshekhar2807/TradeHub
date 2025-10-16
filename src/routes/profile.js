@@ -34,6 +34,29 @@ profileRouter.get('/profile', userAuth, async (req, res) => {
 
 
 
+profileRouter.get("/profile/:id", userAuth, async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const user = await userModel.findById({ _id: id });
+
+        if (!user) {
+            throw new error("User not found");
+        }
+
+        res.status(200).json({
+            datat:user
+        })
+    }
+    catch (err) {
+         res.status(400).json({
+           ERROR: err.message,
+         });
+    }
+})
+
+
+
 profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
     try {
         //get the logged in user

@@ -3,6 +3,7 @@ const app = express();
 require("dotenv").config();
 const connectDb = require('./DBconfig/database')
 require('./utils/weekEndCron')
+const http=require('http')
 
 
 
@@ -17,13 +18,18 @@ const productReviewRouter = require('./routes/productReview');
 const paymentRouter = require('./routes/payment');
 const notificationRouter = require('./routes/notification');
 const offerRouter = require('./routes/weeklyOffer');
+const initializeSocket = require('./utils/socket');
+const chatRouter = require('./routes/allChats');
 
+
+const server = http.createServer(app)
+initializeSocket(server);
 
 connectDb().then(() => {
     console.log("DATABASE CONNECTED SUCCESSFULLY");
-    app.listen(7777, () => {
-        console.log("backened started and server listening on port 7777")
-    })
+    server.listen(7777, () => {
+      console.log("backened started and server listening on port 7777");
+    });
 }).catch((err) => {
     console.log(err)
 })
@@ -51,6 +57,7 @@ app.use("/", productReviewRouter);
 app.use("/", paymentRouter);
 app.use("/", notificationRouter);
 app.use("/", offerRouter);
+app.use("/",chatRouter)
 
 
 
