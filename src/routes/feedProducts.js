@@ -90,8 +90,8 @@ feedproductsRouter.get("/products", userAuth, async (req, res) => {
     const finalProducts = await productDistance(products, 0, city);
 
     res.status(200).json({
-      count: finalProducts.length,
-      results: finalProducts,
+      count: products.length,
+      results: products,
     });
   } catch (err) {
     res.status(400).json({
