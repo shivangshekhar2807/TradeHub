@@ -87,7 +87,7 @@ feedproductsRouter.get("/products", userAuth, async (req, res) => {
 
     //return the products
 
-    const finalProducts = await productDistance(products, 0, city);
+    // const finalProducts = await productDistance(products, 0, city);
 
     res.status(200).json({
       count: products.length,
